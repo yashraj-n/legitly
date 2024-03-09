@@ -3,6 +3,7 @@
 
 import { Box, Button, HStack, Input, VStack } from "@chakra-ui/react";
 import { useState } from "react";
+import * as PDFlib from "pdf-lib";
 
 enum IProgressState {
   Uploaded,
@@ -10,13 +11,14 @@ enum IProgressState {
   Hashing,
   Signing,
   Done,
-  None
+  None,
 }
 
 export default function Sign() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [progressState, setProgressState] = useState<IProgressState>(IProgressState.None);
-
+  const [progressState, setProgressState] = useState<IProgressState>(
+    IProgressState.None
+  );
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     //Checking if file is pdf
@@ -24,9 +26,9 @@ export default function Sign() {
       alert("Please select a PDF file");
       return;
     }
+
     setSelectedFile(file);
-    // You can perform additional actions with the file here, such as uploading it to a server.
-    console.log(file);
+    setProgressState(IProgressState.Reading);
 
     //Getting b64 of file
     const reader = new FileReader();
@@ -35,9 +37,40 @@ export default function Sign() {
       b64 = reader.result;
     };
     reader.readAsDataURL(file);
-    var sha = await sha512(b64);
-    console.log("SHA512: ",sha);
-    await web3Sign(sha);
+    setProgressState(IProgressState.Hashing);
+    //Creating hash of the file
+    var sha = await SHA256(b64);
+    console.log("Hash of File: ", sha);
+    const signature = await web3Sign(sha);
+    if (!b64) {
+      alert("Error in reading file [B64_UNDEFINED]");
+      return;
+    }
+    setProgressState(IProgressState.Signing);
+
+    const pdfDoc = await PDFlib.PDFDocument.load(b64);
+    console.log("PDF Loaded");
+    pdfDoc
+      .getInfoDict()
+      .set(PDFlib.PDFName.of("signature"), PDFlib.PDFString.of(signature));
+    console.log("Wrote into metadata");
+    const pdfBytes = await pdfDoc.save();
+    console.log("PDF Saved");
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    console.log("Blob Created");
+    const formData = new FormData();
+    formData.append("file", blob);
+    console.log("Form Data Created");
+
+    setProgressState(IProgressState.Uploaded);
+
+    // downloading the file
+    const a = document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = "signed.pdf";
+    a.click();
+    window.URL.revokeObjectURL(a.href);
+    setProgressState(IProgressState.Done);
   };
   return (
     <>
@@ -48,6 +81,7 @@ export default function Sign() {
               type="file"
               id="fileInput"
               style={{ display: "none" }}
+              accept="application/pdf"
               onChange={handleFileChange}
             />
             <Button
@@ -75,9 +109,11 @@ function InputsTags({ inputType, handalChange }) {
   );
 }
 
-async function sha512(str: string) {
-  const buf = await crypto.subtle
-    .digest("SHA-256", new TextEncoder("utf-8").encode(str));
+async function SHA256(str: string) {
+  const buf = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder("utf-8").encode(str)
+  );
   return Array.prototype.map
     .call(new Uint8Array(buf), (x) => ("00" + x.toString(16)).slice(-2))
     .join("");
