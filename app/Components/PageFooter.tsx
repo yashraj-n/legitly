@@ -34,8 +34,8 @@ export default function PageFooter({}) {
               <FaMailBulk />
             </Box>
             <Box>
-              <Link href={"mailto : xyz@gmail.com"}>
-                <Text>xyz@gmail.com</Text>
+              <Link href={"mailto : hello@yashraj.eu.org"}>
+                <Text>hello@yashraj.eu.org</Text>
               </Link>
             </Box>
           </HStack>
