@@ -90,9 +90,17 @@ export default function Sign() {
               Choose File
             </Button>
             <p>
-              {selectedFile
-                ? `Signing: ${selectedFile.name}`
-                : "No file selected"}
+              {progressState === IProgressState.Uploaded
+                ? "File Uploaded"
+                : progressState === IProgressState.Reading
+                ? "Reading your PDF"
+                : progressState === IProgressState.Hashing
+                ? "Hashing your PDF"
+                : progressState === IProgressState.Signing
+                ? "Signing your PDF"
+                : progressState === IProgressState.Done
+                ? "Completed!!"
+                : ""}
             </p>
           </Box>
         </VStack>
