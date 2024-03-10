@@ -15,11 +15,14 @@ enum IProgressState {
 }
 
 export default function Sign() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [_, setSelectedFile] = useState(null);
   const [progressState, setProgressState] = useState<IProgressState>(
     IProgressState.None
   );
+  // handling file changes
   const handleFileChange = async (event) => {
+    const pdfToText = await import("react-pdftotext");
+
     const file = event.target.files[0];
     //Checking if file is pdf
     if (file.type !== "application/pdf") {
@@ -27,50 +30,58 @@ export default function Sign() {
       return;
     }
 
+    if (!ethereum) {
+      alert("Please install metamask");
+      return;
+    }
+
     setSelectedFile(file);
     setProgressState(IProgressState.Reading);
 
-    //Getting b64 of file
+    var pdfBuffer;
     const reader = new FileReader();
-    var b64;
-    reader.onload = function () {
-      b64 = reader.result;
+    reader.onload = async (e) => {
+      const pdfToText = (await import("react-pdftotext")).default;
+      pdfBuffer = e.target.result;
+      const text = await pdfToText(file);
+      console.log(text);
+      const b64 = Buffer.from(pdfBuffer).toString("base64");
+      console.log("B64: ", b64);
+
+      setProgressState(IProgressState.Hashing);
+      //Creating hash of the file
+      var sha = await SHA256(text);
+      console.log("Hash of File: ", sha);
+
+      //Signing the hash
+      const signature = await web3Sign(sha);
+
+      setProgressState(IProgressState.Signing);
+
+      // Adding signature to the metadata of the pdf
+      const pdfDoc = await PDFlib.PDFDocument.load(b64);
+      console.log("PDF Loaded");
+      pdfDoc
+        .getInfoDict()
+        .set(PDFlib.PDFName.of("signature"), PDFlib.PDFString.of(signature));
+
+      console.log("Wrote into metadata");
+      // Saving the pdf
+      const pdfBytes = await pdfDoc.save();
+      console.log("PDF Saved");
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      console.log("Blob Created");
+      setProgressState(IProgressState.Uploaded);
+
+      // downloading the file
+      const a = document.createElement("a");
+      a.href = window.URL.createObjectURL(blob);
+      a.download = "signed.pdf";
+      a.click();
+      window.URL.revokeObjectURL(a.href);
+      setProgressState(IProgressState.Done);
     };
-    reader.readAsDataURL(file);
-    setProgressState(IProgressState.Hashing);
-    //Creating hash of the file
-    var sha = await SHA256(b64);
-    console.log("Hash of File: ", sha);
-    const signature = await web3Sign(sha);
-    if (!b64) {
-      alert("Error in reading file [B64_UNDEFINED]");
-      return;
-    }
-    setProgressState(IProgressState.Signing);
-
-    const pdfDoc = await PDFlib.PDFDocument.load(b64);
-    console.log("PDF Loaded");
-    pdfDoc
-      .getInfoDict()
-      .set(PDFlib.PDFName.of("signature"), PDFlib.PDFString.of(signature));
-    console.log("Wrote into metadata");
-    const pdfBytes = await pdfDoc.save();
-    console.log("PDF Saved");
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
-    console.log("Blob Created");
-    const formData = new FormData();
-    formData.append("file", blob);
-    console.log("Form Data Created");
-
-    setProgressState(IProgressState.Uploaded);
-
-    // downloading the file
-    const a = document.createElement("a");
-    a.href = window.URL.createObjectURL(blob);
-    a.download = "signed.pdf";
-    a.click();
-    window.URL.revokeObjectURL(a.href);
-    setProgressState(IProgressState.Done);
+    reader.readAsArrayBuffer(file);
   };
   return (
     <>
