@@ -1,11 +1,19 @@
 //@ts-nocheck
 "use client";
 
-import { Box, HStack, Heading, VStack, useMediaQuery } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Heading,
+  VStack,
+  useMediaQuery,
+} from "@chakra-ui/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { GrMenu } from "react-icons/gr";
-
+import bmc from "../Img/bmc.svg";
 export default function Navbar() {
   const [openMenu, setOpenManu] = useState(false);
   function handelManu() {
@@ -17,9 +25,9 @@ export default function Navbar() {
   }
   const [isGraterthen] = useMediaQuery("(min-width: 700px)");
   return (
-    <Box position={"fixed"} w={"100%"} bg={"#171717"} p={3}>
+    <Box position={"fixed"} w={"100%"} bg={"#171717"} p={3} zIndex={4}>
       <HStack justifyContent={"space-between"}>
-        <Box className="logo">
+        <Box className="logo" p={2}>
           <Link href={"/"}>
             <Heading size={"xl"}>legitly</Heading>
           </Link>
@@ -27,14 +35,26 @@ export default function Navbar() {
         {isGraterthen ? (
           <Box>
             <HStack>
-              <Menu link={"/About"} title={"About"} />
               <Menu link={"/Verify"} title={"Verify"} />
               <Menu link={"/Sign"} title={"Sign"} />
+              <Button
+                p={5}
+                className="nextBtn"
+                borderRadius={"30px"}
+                bg={"purple"}
+              >
+                <HStack>
+                  <Box w={"20px"}>
+                    <Image src={bmc} alt="coffee" />
+                  </Box>
+                  <Heading size={"md"}>Donate Us</Heading>
+                </HStack>
+              </Button>
             </HStack>
           </Box>
         ) : (
           <Box onClick={handelManu}>
-            <Heading>
+            <Heading p={2}>
               <GrMenu />
             </Heading>
           </Box>
@@ -43,9 +63,21 @@ export default function Navbar() {
       {openMenu === true ? (
         <Box>
           <VStack>
-            <Menu link={"/About"} title={"About"} />
             <Menu link={"/Verify"} title={"Verify"} />
             <Menu link={"/Sign"} title={"Sign"} />
+            <Button
+                p={5}
+                className="nextBtn"
+                borderRadius={"30px"}
+                bg={"purple"}
+              >
+                <HStack>
+                  <Box w={"20px"}>
+                    <Image src={bmc} alt="coffee" />
+                  </Box>
+                  <Heading size={"md"}>Donate Us</Heading>
+                </HStack>
+              </Button>
           </VStack>
         </Box>
       ) : (
