@@ -44,7 +44,7 @@ export default function Verify() {
               </Button>
             </Box>
             <VStack>
-              <Button className="nextBtn" type="submit">
+              <Button className="nextBtn" onClick={handalSubmit} type="submit">
                 Submit
               </Button>
             </VStack>
