@@ -12,9 +12,18 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import verifyImg from "../Img/verify.png";
+import { useState } from "react";
+import * as PDFlib from "pdf-lib";
+import { verifyMessage, toUtf8Bytes } from "ethers";
 
 export default function Verify() {
-  function handalSubmit(e) {
+  const [pdfFile, setPdfFile] = useState(null);
+  const [publicAddress, setPublicAddress] = useState("");
+
+  const [isValid, setIsValid] = useState(false);
+  const [invalidError, setInvalidError] = useState("");
+
+  function handleSubmit(e) {
     e.preventDefault();
     if (!pdfFile) {
       alert("Please select a file");
@@ -26,34 +35,77 @@ export default function Verify() {
       return;
     }
 
-    console.log("[State]: ", pdfFile, publicAddress);
+    let tempPublicAddress = publicAddress;
+
+    //Appending 0x if not present
+    if (!tempPublicAddress.startsWith("0x")) {
+      tempPublicAddress = "0x" + tempPublicAddress;
+    }
+
+    //Lowercasing the public address
+    tempPublicAddress = tempPublicAddress.toLowerCase();
+
+    console.log("[State]: ", pdfFile, tempPublicAddress);
     console.log("[Status]: Init");
 
     const reader = new FileReader();
-    var b64;
     reader.onload = async function () {
-      b64 = reader.result;
-      console.log("[FileReader]: Reading file complete");
-      console.log("[B64]: ", b64);
+      console.log("[Status]: Reading");
+      const pdfToText = (await import("react-pdftotext")).default;
+      const text = await pdfToText(pdfFile);
+      console.log("[Text]: ", text);
 
-      console.log("[Status]: Reading file");
-      console.log("[Recheck] First 100 bytes of base64: ", b64.slice(0, 100));
-      const sha = await SHA256(b64);
-      console.log("[Status]: SHA256 complete");
-      console.log("[SHA256]: ", sha);
+      //Checking Headers
+      console.log("[Status]: Checking Headers");
+      const pdfDoc = await PDFlib.PDFDocument.load(reader.result);
+
+      console.log("[Status]: PDF Loaded");
+      try {
+        var signatureHeader = pdfDoc
+          .getInfoDict()
+          .get(PDFlib.PDFName.of("signature")).value;
+        console.log("[Signature Header]: ", signatureHeader);
+      } catch (e) {
+        setIsValid(false);
+        setInvalidError("Something went wrong while reading the PDF headers");
+        return;
+      }
+
+      if (!signatureHeader) {
+        console.log("[Status]: No Signature Found");
+        setInvalidError("[ERR_NO_METASIGN] PDF Not Signed");
+        setIsValid(false);
+        return;
+      }
+
+      const sha = await SHA256(text);
+      console.log("[SHA] Sha256", sha);
+
+      //Verifying Signature
+      console.log("[Status]: Verifying Signature");
+      const isValid = await verifySignature(
+        signatureHeader,
+        tempPublicAddress,
+        sha
+      );
+      console.log("[Status]: Signature Verified");
+      console.log("[Result]: ", isValid);
     };
     reader.readAsDataURL(pdfFile);
-
   }
-  function handleFileChange() {}
+  const [isGraterthen] = useMediaQuery("(min-width: 600px)");
   return (
     <>
       <HStack justifyContent={"space-evenly"} flexWrap={"wrap"}>
         <Box w={isGraterthen ? "50%" : "100%"}>
           <form>
             <Box w={"100%"} p={3} m={3}>
-              <Text mb="8px">Enter</Text>
-              <Input w={"97%"} />
+              <Text mb="8px">Public Address</Text>
+              <Input
+                placeholder="0xB7566293139...."
+                w={"97%"}
+                onChange={(e) => setPublicAddress(e.target.value)}
+              />
             </Box>
             <Box p={3} m={3}>
               <Text mb="8px">Choose File</Text>
@@ -62,7 +114,7 @@ export default function Verify() {
                 id="fileInput"
                 style={{ display: "none" }}
                 accept="application/pdf"
-                onChange={handleFileChange}
+                onChange={(e) => setPdfFile(e.target.files[0])}
               />
               <Button
                 w={"100%"}
@@ -72,7 +124,7 @@ export default function Verify() {
               </Button>
             </Box>
             <VStack>
-              <Button className="nextBtn" onClick={handalSubmit} type="submit">
+              <Button className="nextBtn" onClick={handleSubmit} type="submit">
                 Submit
               </Button>
             </VStack>
@@ -86,6 +138,16 @@ export default function Verify() {
   );
 }
 
+async function SHA256(str: string) {
+  const buf = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder("utf-8").encode(str)
+  );
+  return Array.prototype.map
+    .call(new Uint8Array(buf), (x) => ("00" + x.toString(16)).slice(-2))
+    .join("");
+}
+
 function InputsTags({ inputType, handalChange }) {
   return (
     <Box w={"100%"} p={3} m={3}>
@@ -93,4 +155,12 @@ function InputsTags({ inputType, handalChange }) {
       <Input w={"100%"} />
     </Box>
   );
+}
+
+async function verifySignature(signature, publicKey, hash) {
+  hash = `SHA256:${hash}`
+  console.log("hash: ",hash);
+  const signerAddress = verifyMessage(hash, signature);
+  console.log("[verifySignature] Got Signer: ", signerAddress);
+  return signerAddress.toLowerCase() === publicKey;
 }

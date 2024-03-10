@@ -4,6 +4,7 @@
 import { Box, Button, HStack, Input, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import * as PDFlib from "pdf-lib";
+import { hexlify, toBeArray, toUtf8String } from "ethers";
 
 enum IProgressState {
   Uploaded,
@@ -15,13 +16,11 @@ enum IProgressState {
 }
 
 export default function Sign() {
-  const [_, setSelectedFile] = useState(null);
   const [progressState, setProgressState] = useState<IProgressState>(
     IProgressState.None
   );
   // handling file changes
   const handleFileChange = async (event) => {
-
     const file = event.target.files[0];
     //Checking if file is pdf
     if (file.type !== "application/pdf") {
@@ -33,43 +32,43 @@ export default function Sign() {
       alert("Please install metamask");
       return;
     }
-
-    setSelectedFile(file);
     setProgressState(IProgressState.Reading);
 
     var pdfBuffer;
     const reader = new FileReader();
+
     reader.onload = async (e) => {
       const pdfToText = (await import("react-pdftotext")).default;
       pdfBuffer = e.target.result;
       const text = await pdfToText(file);
       console.log(text);
-      const b64 = Buffer.from(pdfBuffer).toString("base64");
-      console.log("B64: ", b64);
 
       setProgressState(IProgressState.Hashing);
+
       //Creating hash of the file
       var sha = await SHA256(text);
       console.log("Hash of File: ", sha);
 
       //Signing the hash
       const signature = await web3Sign(sha);
-
       setProgressState(IProgressState.Signing);
 
       // Adding signature to the metadata of the pdf
-      const pdfDoc = await PDFlib.PDFDocument.load(b64);
+      const pdfDoc = await PDFlib.PDFDocument.load(pdfBuffer);
       console.log("PDF Loaded");
+      //
       pdfDoc
         .getInfoDict()
         .set(PDFlib.PDFName.of("signature"), PDFlib.PDFString.of(signature));
 
       console.log("Wrote into metadata");
+
       // Saving the pdf
       const pdfBytes = await pdfDoc.save();
       console.log("PDF Saved");
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       console.log("Blob Created");
+
       setProgressState(IProgressState.Uploaded);
 
       // downloading the file
@@ -141,11 +140,14 @@ async function web3Sign(content) {
   console.log("Requesting Eth acc");
   const accounts = await ethereum.request({ method: "eth_requestAccounts" });
   const account = accounts[0];
+  // content = toUtf8String(content);
+  // content = "0x" + content;
   console.log("Acc: ", account);
+  console.log("Web3 COntent: ", content);
   console.log("Signing");
   const signature = await ethereum.request({
     method: "personal_sign",
-    params: [content, account],
+    params: [`SHA256:${content}`, account, true],
   });
   console.log("Signature: ", signature);
   return signature;
