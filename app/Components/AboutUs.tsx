@@ -104,33 +104,38 @@ function SocalMediaSec() {
   const [isGraterthen] = useMediaQuery("(min-width: 1000px)");
   return (
     <>
-      <HStack
-        justifyContent={"space-evenly"}
-        flexWrap={"wrap"}
-        // alignItems={"start"}
-      >
-        <Box textAlign={"center"}>
-          <Heading fontSize={"400px"} color={"#86EFAC"}>
-            <FaGithub />
-          </Heading>
-        </Box>
-        <Box p={2} w={isGraterthen ? "50%" : "100%"}>
-          <Heading
-            color={"#86EFAC"}
-            size={"4xl"}
-          >{`We're Open Source`}</Heading>
-          <Text
-            p={3}
-            color={"#6B7280"}
-            fontSize={"20px"}
-          >{`Yes you heard right, this website is open source and you can find code of this website on GitHub. You can request a feature, contribute to project by adding feedbacks and mentioning bugs if they exist. `}</Text>
-          <Link href={"/"}>
-            <Button m={3} className="nextBtn">
-              Visit GitHub{" "}
-            </Button>
-          </Link>
-        </Box>
-      </HStack>
+      <VStack h={isGraterthen ? "60vh" : "auto"} justifyContent={"center"}>
+        <HStack
+          justifyContent={"space-evenly"}
+          flexWrap={"wrap"}
+          // alignItems={"start"}
+        >
+          <Box textAlign={"center"}>
+            <Heading
+              fontSize={isGraterthen ? "400px" : "300px"}
+              color={"#86EFAC"}
+            >
+              <FaGithub />
+            </Heading>
+          </Box>
+          <Box p={2} w={isGraterthen ? "50%" : "100%"}>
+            <Heading
+              color={"#86EFAC"}
+              size={"4xl"}
+            >{`We're Open Source`}</Heading>
+            <Text
+              p={3}
+              color={"#6B7280"}
+              fontSize={"20px"}
+            >{`Yes you heard right, this website is open source and you can find code of this website on GitHub. You can request a feature, contribute to project by adding feedbacks and mentioning bugs if they exist. `}</Text>
+            <Link href={"/"}>
+              <Button m={3} className="nextBtn">
+                Visit GitHub{" "}
+              </Button>
+            </Link>
+          </Box>
+        </HStack>
+      </VStack>
     </>
   );
 }
