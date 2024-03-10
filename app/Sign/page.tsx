@@ -1,7 +1,15 @@
 //@ts-nocheck
 "use client";
 
-import { Box, Button, HStack, Input, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Input,
+  Text,
+  VStack,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import * as PDFlib from "pdf-lib";
 import { hexlify, toBeArray, toUtf8String } from "ethers";
@@ -82,15 +90,24 @@ export default function Sign() {
     };
     reader.readAsArrayBuffer(file);
   };
+  const [isGraterthen] = useMediaQuery("(min-width: 600px)");
   return (
     <>
-      <HStack justifyContent={"space-evenly"}>
-        <Box w={"45%"}>
+      <HStack
+        mt={isGraterthen ? "0" : 20}
+        justifyContent={"space-evenly"}
+        flexWrap={"wrap-reverse"}
+      >
+        <Box w={isGraterthen ? "40%" : "100%"}>
           <Image src={uplode} alt="uplode" />
         </Box>
-        <Box w={"50%"}>
+        <Box w={isGraterthen ? "50%" : "100%"}>
           <font>
-            <VStack w={"100%"} h={"75vh"} justifyContent={"center"}>
+            <VStack
+              w={"100%"}
+              h={isGraterthen ? "auto" : "auto"}
+              justifyContent={"center"}
+            >
               <Box w={"100%"}>
                 <Text fontSize={"20px"} p={3}>
                   Uplode PDF:

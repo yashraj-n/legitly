@@ -37,6 +37,7 @@ export default function Navbar() {
         {isGraterthen ? (
           <Box>
             <HStack>
+              <Menu link={"/"} title={"Home"} />
               <Menu link={"/Verify"} title={"Verify"} />
               <Menu link={"/Sign"} title={"Sign"} />
               {/* <Button
@@ -65,6 +66,7 @@ export default function Navbar() {
       {openMenu === true ? (
         <Box>
           <VStack>
+          <Menu link={"/"} title={"Home"} />
             <Menu link={"/Verify"} title={"Verify"} />
             <Menu link={"/Sign"} title={"Sign"} />
           </VStack>
