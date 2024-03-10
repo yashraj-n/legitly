@@ -14,6 +14,11 @@ body {
   font-style: normal;
 }
 
+::selection{
+  background-color: burlywood !important;
+  color: black !important;
+}
+
 /* next btn  */
 .nextBtn {
   cursor: pointer !important;

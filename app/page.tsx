@@ -14,7 +14,6 @@ import Link from "next/link";
 import { CiHeart } from "react-icons/ci";
 import { BiLink } from "react-icons/bi";
 
-
 import AboutUs from "./Components/AboutUs";
 export default function Home() {
   const [isGraterthen] = useMediaQuery("(min-width: 1000px)");
@@ -35,11 +34,11 @@ export default function Home() {
               LEGITLY
             </Heading>
             <Box w={isGraterthen ? "80%" : "100%"} p={3}>
-              <Heading color={"#737373"} textAlign={"center"} size={"md"}>
+              <Text color={"#737373"} textAlign={"center"} size={"25px"}>
                 Your go-to platform for verifying PDF authenticity. Ensure your
                 documents are genuine and unaltered with ease. Join us today for
                 peace of mind.
-              </Heading>
+              </Text>
             </Box>
             <VStack>
               <Link href={"/Verify"}>
@@ -52,7 +51,7 @@ export default function Home() {
         </Box>
       </HStack>
 
-      <AboutUs/>
+      <AboutUs />
     </>
   );
 }

@@ -1,6 +1,6 @@
 //@ts-nocheck
 "use client";
-
+import toast, { Toaster } from "react-hot-toast";
 import {
   Box,
   Button,
@@ -24,14 +24,22 @@ export default function Verify() {
   const [invalidError, setInvalidError] = useState("");
 
   function handleSubmit(e) {
+    invalidError !== "" ? toast.error("Something went wrong") : "";
     e.preventDefault();
     if (!pdfFile) {
-      alert("Please select a file");
+      toast("Please Select File", {
+        icon: "🙏🏻",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       return;
     }
 
     if (publicAddress.length < 4) {
-      alert("Please enter a valid public address");
+      toast.error("Please enter a valid public address");
       return;
     }
 
@@ -92,14 +100,14 @@ export default function Verify() {
       console.log("[Result]: ", isValid);
       setIsValid(isValid);
       setInvalidError(isValid ? "" : "Invalid Signature");
-
     };
     reader.readAsDataURL(pdfFile);
   }
-  
+
   const [isGraterthen] = useMediaQuery("(min-width: 600px)");
   return (
     <>
+      <Toaster />
       <HStack justifyContent={"space-evenly"} flexWrap={"wrap"}>
         <Box w={isGraterthen ? "50%" : "100%"}>
           <form>
@@ -122,7 +130,9 @@ export default function Verify() {
               />
               <Button
                 w={"100%"}
-                onClick={() => document.getElementById("fileInput").click()}
+                onClick={() => {
+                  document.getElementById("fileInput").click();
+                }}
               >
                 Choose File
               </Button>
@@ -161,9 +171,9 @@ function InputsTags({ inputType, handalChange }) {
   );
 }
 
-async function verifySignature(signature : string, publicKey : string, hash) {
-  hash = `SHA256:${hash}`
-  console.log("hash: ",hash);
+async function verifySignature(signature: string, publicKey: string, hash) {
+  hash = `SHA256:${hash}`;
+  console.log("hash: ", hash);
   const signerAddress = verifyMessage(hash, signature);
   console.log("[verifySignature] Got Signer: ", signerAddress);
   return signerAddress.toLowerCase() === publicKey.toLowerCase();

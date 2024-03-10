@@ -13,12 +13,19 @@ import {
 } from "@chakra-ui/react";
 import socalMediaImg from "../Img/socials.svg";
 import Image from "next/image";
-import { FaNetworkWired } from "react-icons/fa";
+import { FaGithub, FaNetworkWired } from "react-icons/fa";
 import { FcProcess } from "react-icons/fc";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import { GiFlatPlatform } from "react-icons/gi";
 import { HiOutlineCubeTransparent } from "react-icons/hi";
 import { VscSymbolConstant } from "react-icons/vsc";
+
+// creaters img
+import himanshu from "../Img/Creater/himanshu.jpeg";
+import yashraj from "../Img/Creater/yeshraj.png";
+import gaurav from "../Img/Creater/gaurav.jpg";
+
+import Link from "next/link";
 
 export default function AboutUs() {
   const [isGraterthen] = useMediaQuery("(min-width: 1000px)");
@@ -96,41 +103,33 @@ function SocalMediaSec() {
   const [isGraterthen] = useMediaQuery("(min-width: 1000px)");
   return (
     <>
-      <VStack
-        justifyContent={"center"}
-        h={isGraterthen ? "80vh" : "auto"}
-        p={3}
-        mt={"20px"}
+      <HStack
+        justifyContent={"space-evenly"}
+        flexWrap={"wrap"}
+        // alignItems={"start"}
       >
-        <HStack p={3} flexWrap={"wrap-reverse"} justifyContent={"center"}>
-          <Box
-            textAlign={isGraterthen ? "right" : "center"}
-            maxW={isGraterthen ? "50%" : "100%"}
+        <Box textAlign={"center"}>
+          <Heading fontSize={"400px"} color={"#86EFAC"}>
+            <FaGithub />
+          </Heading>
+        </Box>
+        <Box p={2} w={isGraterthen ? "50%" : "100%"}>
+          <Heading
+            color={"#86EFAC"}
+            size={"4xl"}
+          >{`We're Open Source`}</Heading>
+          <Text
             p={3}
-          >
-            <Heading m={3} size={"3xl"}>
-              Our Social Links
-            </Heading>
-            <Heading m={3} color={"#6B7280"} size={"ld"}>
-              We are available on X, LinkedIn, and GitHub. You can connect with
-              us to get notification about any new feature we add, any cool
-              product we create or get early access of some cool projects !
-            </Heading>
-            <HStack
-              flexWrap={"wrap"}
-              justifyContent={isGraterthen ? "right" : "center"}
-            >
-              <SocalBtn title={"Instagram "} />
-              <SocalBtn title={"Linkdin "} />
-              <SocalBtn title={"X "} />
-              <SocalBtn title={"Github "} />
-            </HStack>
-          </Box>
-          <Box p={2} maxW={isGraterthen ? "40%" : "100%"} rotate={"20%"}>
-            <Image width={"100%"} src={socalMediaImg} alt="socal media" />
-          </Box>
-        </HStack>
-      </VStack>
+            color={"#6B7280"}
+            fontSize={"20px"}
+          >{`Yes you heard right, this website is open source and you can find code of this website on GitHub. You can request a feature, contribute to project by adding feedbacks and mentioning bugs if they exist. `}</Text>
+          <Link href={"/"}>
+            <Button m={3} className="nextBtn">
+              Visit GitHub{" "}
+            </Button>
+          </Link>
+        </Box>
+      </HStack>
     </>
   );
 }
@@ -162,26 +161,20 @@ function CreaterSec() {
             justifyContent={isGraterthen ? "center" : "normal"}
           >
             <Creators
+              githubProfile={"gaurav-sunthwal"}
               creatorName={"Gaurav Sunthwal"}
-              imgSrc={
-                "https://gaurav-sunthwal.vercel.app/_next/static/media/me.9e81b52f.jpg"
-              }
+              imgSrc={gaurav}
             />
             <Creators
+              githubProfile={"hmshuv"}
               creatorName={"Himanshu Gupta"}
-              imgSrc={"https://avatars.githubusercontent.com/u/136360912?v=4"}
+              imgSrc={himanshu}
             />
+            <Creators creatorName={"Ashish Sharma"} imgSrc={""} />
             <Creators
-              creatorName={"Ashish Sharma"}
-              imgSrc={
-                "https://media.licdn.com/dms/image/D5603AQG5VQjrYFGNbA/profile-displayphoto-shrink_100_100/0/1694855699800?e=1715212800&v=beta&t=wBsIv8CFJXc9fv6JUVvbYC_4plYEcxD_laoKh7wQRMQ"
-              }
-            />
-            <Creators
+              githubProfile={"yashraj-n"}
               creatorName={"Yashraj Narke"}
-              imgSrc={
-                "https://media.licdn.com/dms/image/D4D03AQHD3eTjtUTN9w/profile-displayphoto-shrink_100_100/0/1694971269043?e=1715212800&v=beta&t=UMgjEJBoVKqdW1WO5Lmt7Kheu78RdU9F15FPJs-h4jQ"
-              }
+              imgSrc={yashraj}
             />
           </HStack>
         </VStack>
@@ -202,17 +195,31 @@ function SocalBtn({ title }) {
   );
 }
 
-function Creators({ imgSrc, creatorName }) {
+function Creators({ imgSrc, creatorName, githubProfile }) {
   return (
     <>
-      <VStack m={2} p={3}>
-        <Box display={"block"} m={"auto"} h={"120px"} w={"120px"}>
-          <Img borderRadius={"50%"} src={imgSrc} alt="img" />
-        </Box>
-        <Box whiteSpace={"nowrap"}>
-          <Heading size={"md"}>{creatorName}</Heading>
-        </Box>
-      </VStack>
+      <Link href={`https://github.com/${githubProfile}`} target="blank">
+        <VStack m={2} p={3}>
+          <Box
+            display={"block"}
+            m={"auto"}
+            h={"120px"}
+            w={"120px"}
+            borderRadius={"50%"}
+          >
+            <Image
+              style={{
+                borderRadius: "50%",
+              }}
+              src={imgSrc}
+              alt="img"
+            />
+          </Box>
+          <Box whiteSpace={"nowrap"}>
+            <Heading size={"md"}>{creatorName}</Heading>
+          </Box>
+        </VStack>
+      </Link>
     </>
   );
 }
