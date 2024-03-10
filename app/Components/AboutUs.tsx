@@ -24,6 +24,7 @@ import { VscSymbolConstant } from "react-icons/vsc";
 import himanshu from "../Img/Creater/himanshu.jpeg";
 import yashraj from "../Img/Creater/yeshraj.png";
 import gaurav from "../Img/Creater/gaurav.jpg";
+import ashish from "../Img/Creater/Ashish.jpeg";
 
 import Link from "next/link";
 
@@ -170,7 +171,11 @@ function CreaterSec() {
               creatorName={"Himanshu Gupta"}
               imgSrc={himanshu}
             />
-            <Creators creatorName={"Ashish Sharma"} imgSrc={""} />
+            <Creators
+              githubProfile={"ASHISH9925"}
+              creatorName={"Ashish Sharma"}
+              imgSrc={ashish}
+            />
             <Creators
               githubProfile={"yashraj-n"}
               creatorName={"Yashraj Narke"}

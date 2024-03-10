@@ -1,11 +1,12 @@
 //@ts-nocheck
 "use client";
 
-import { Box, Button, HStack, Input, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Input, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import * as PDFlib from "pdf-lib";
 import { hexlify, toBeArray, toUtf8String } from "ethers";
-
+import Image from "next/image";
+import uplode from "../Img/uplode.png";
 enum IProgressState {
   Uploaded,
   Reading,
@@ -83,44 +84,57 @@ export default function Sign() {
   };
   return (
     <>
-      <font>
-        <VStack h={"75vh"} justifyContent={"center"}>
-          <Box>
-            <Input
-              type="file"
-              id="fileInput"
-              style={{ display: "none" }}
-              accept="application/pdf"
-              onChange={handleFileChange}
-            />
-            <Button
-              onClick={() => document.getElementById("fileInput").click()}
-            >
-              Choose File
-            </Button>
-            <p>
-              {progressState === IProgressState.Uploaded
-                ? "File Uploaded"
-                : progressState === IProgressState.Reading
-                ? "Reading your PDF"
-                : progressState === IProgressState.Hashing
-                ? "Hashing your PDF"
-                : progressState === IProgressState.Signing
-                ? "Signing your PDF"
-                : progressState === IProgressState.Done
-                ? "Completed!!"
-                : ""}
-            </p>
-          </Box>
-        </VStack>
-      </font>
+      <HStack justifyContent={"space-evenly"}>
+        <Box w={"45%"}>
+          <Image src={uplode} alt="uplode" />
+        </Box>
+        <Box w={"50%"}>
+          <font>
+            <VStack w={"100%"} h={"75vh"} justifyContent={"center"}>
+              <Box w={"100%"}>
+                <Text fontSize={"20px"} p={3}>
+                  Uplode PDF:
+                </Text>
+                <Box w={"100%"} p={3}>
+                  <Input
+                    type="file"
+                    id="fileInput"
+                    style={{ display: "none" }}
+                    accept="application/pdf"
+                    onChange={handleFileChange}
+                  />
+                  <Button
+                    w={"100%"}
+                    onClick={() => document.getElementById("fileInput").click()}
+                  >
+                    Choose File
+                  </Button>
+                  <Text p={2}>
+                    {progressState === IProgressState.Uploaded
+                      ? "File Uploaded"
+                      : progressState === IProgressState.Reading
+                      ? "Reading your PDF"
+                      : progressState === IProgressState.Hashing
+                      ? "Hashing your PDF"
+                      : progressState === IProgressState.Signing
+                      ? "Signing your PDF"
+                      : progressState === IProgressState.Done
+                      ? "Completed!!"
+                      : ""}
+                  </Text>
+                </Box>
+              </Box>
+            </VStack>
+          </font>
+        </Box>
+      </HStack>
     </>
   );
 }
 
 function InputsTags({ inputType, handalChange }) {
   return (
-    <HStack justifyContent={"center"} w={"100%"}>
+    <HStack justifyContent={"center"} w={"50%"}>
       <Input type={inputType} m={3} onChange={handalChange} w={"90%"} />
     </HStack>
   );
