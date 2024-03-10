@@ -90,9 +90,13 @@ export default function Verify() {
       );
       console.log("[Status]: Signature Verified");
       console.log("[Result]: ", isValid);
+      setIsValid(isValid);
+      setInvalidError(isValid ? "" : "Invalid Signature");
+
     };
     reader.readAsDataURL(pdfFile);
   }
+  
   const [isGraterthen] = useMediaQuery("(min-width: 600px)");
   return (
     <>
@@ -157,10 +161,10 @@ function InputsTags({ inputType, handalChange }) {
   );
 }
 
-async function verifySignature(signature, publicKey, hash) {
+async function verifySignature(signature : string, publicKey : string, hash) {
   hash = `SHA256:${hash}`
   console.log("hash: ",hash);
   const signerAddress = verifyMessage(hash, signature);
   console.log("[verifySignature] Got Signer: ", signerAddress);
-  return signerAddress.toLowerCase() === publicKey;
+  return signerAddress.toLowerCase() === publicKey.toLowerCase();
 }
