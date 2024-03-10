@@ -112,13 +112,13 @@ function SocalMediaSec() {
         >
           <Box textAlign={"center"}>
             <Heading
-              fontSize={isGraterthen ? "400px" : "300px"}
+              fontSize={isGraterthen ? "400px" : "200px"}
               color={"#86EFAC"}
             >
               <FaGithub />
             </Heading>
           </Box>
-          <Box p={2} w={isGraterthen ? "50%" : "100%"}>
+          <Box p={2} m={3} w={isGraterthen ? "50%" : "100%"}>
             <Heading
               color={"#86EFAC"}
               size={"4xl"}
