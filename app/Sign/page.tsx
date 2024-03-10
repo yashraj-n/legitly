@@ -21,7 +21,6 @@ export default function Sign() {
   );
   // handling file changes
   const handleFileChange = async (event) => {
-    const pdfToText = await import("react-pdftotext");
 
     const file = event.target.files[0];
     //Checking if file is pdf
