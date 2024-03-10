@@ -38,8 +38,10 @@ export default function AboutUs() {
             >{`In today's digital age, the authenticity and integrity of documents hold paramount importance. Whether it's legal contracts, academic transcripts, or financial statements, ensuring that PDFs remain unaltered and trustworthy is crucial. Enter LEGITLY, your trusted PDF verification platform, dedicated to providing peace of mind in an era where document tampering and forgery are significant concerns.`}</Text>
           </Box>
         </HStack>
-        <Heading size={"lg"}>Why LEGITLY?</Heading>
-        <HStack flexWrap={"wrap"} justifyContent={"space-evenly"}>
+        <Heading size={"lg"} p={2}>
+          Why LEGITLY?
+        </Heading>
+        <HStack mt={2} flexWrap={"wrap"} justifyContent={"space-evenly"}>
           <Feature
             title={"Uncompromising Verification:"}
             discription={
@@ -85,7 +87,6 @@ export default function AboutUs() {
         </HStack>
       </VStack>
       <SocalMediaSec />
-      {/* Creater Sectrion */}
       <CreaterSec />
     </>
   );
@@ -220,16 +221,23 @@ function Feature({ icon, title, discription }) {
   const [isGraterthen] = useMediaQuery("(min-width: 1000px)");
   return (
     <>
-      <Box w={isGraterthen ? "40%" : "100%"}>
+      <Box
+        w={isGraterthen ? "40%" : "100%"}
+        h={isGraterthen ? "200px" : "auto"}
+      >
         <HStack alignItems={"start"}>
-          <Box bg={"#86EFAC"} p={3} mt={4} borderRadius={4}>
-            <Heading color={"black"} size={"md"}>
+          <Box bg={"#86EFAC"} p={2} mt={4} borderRadius={4}>
+            <Heading color={"black"} size={"lg"}>
               {icon}
             </Heading>
           </Box>
           <Box textAlign={"left"} m={3}>
-            <Heading size={"md"}>{title}</Heading>
-            <Text color={"#6B7280"}>{discription}</Text>
+            <Heading size={"md"} p={1}>
+              {title}
+            </Heading>
+            <Text p={1} color={"#6B7280"}>
+              {discription}
+            </Text>
           </Box>
         </HStack>
       </Box>
