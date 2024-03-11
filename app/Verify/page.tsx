@@ -97,8 +97,9 @@ export default function Verify() {
         sha
       );
       console.log("[Status]: Signature Verified");
-      toast.success("Verified")
+      
       console.log("[Result]: ", isValid);
+      isValid === true ? toast.success("Verified") : toast.error("Invalid Signature")
       setIsValid(isValid);
       setInvalidError(isValid ? "" : "Invalid Signature");
     };
