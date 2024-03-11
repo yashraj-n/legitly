@@ -16,6 +16,8 @@ import { useState } from "react";
 import { GrMenu } from "react-icons/gr";
 import bmc from "../Img/bmc.svg";
 import logo from "../Img/logo.png";
+
+
 export default function Navbar() {
   const [openMenu, setOpenManu] = useState(false);
   function handelManu() {
@@ -66,7 +68,7 @@ export default function Navbar() {
       {openMenu === true ? (
         <Box>
           <VStack>
-          <Menu link={"/"} title={"Home"} />
+            <Menu link={"/"} title={"Home"} />
             <Menu link={"/Verify"} title={"Verify"} />
             <Menu link={"/Sign"} title={"Sign"} />
           </VStack>
