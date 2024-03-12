@@ -4,10 +4,15 @@
 import {
   Box,
   Button,
+  Card,
   HStack,
   Heading,
+  Modal,
+  ModalContent,
+  ModalOverlay,
   Text,
   VStack,
+  useDisclosure,
   useMediaQuery,
 } from "@chakra-ui/react";
 import Image from "next/image";
@@ -16,7 +21,7 @@ import { useState } from "react";
 import { GrMenu } from "react-icons/gr";
 import bmc from "../Img/bmc.svg";
 import logo from "../Img/logo.png";
-
+import { motion } from "framer-motion";
 
 export default function Navbar() {
   const [openMenu, setOpenManu] = useState(false);
@@ -28,6 +33,7 @@ export default function Navbar() {
       : "";
   }
   const [isGraterthen] = useMediaQuery("(min-width: 700px)");
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box position={"fixed"} w={"100%"} bg={"#171717"} p={3} zIndex={4}>
       <HStack justifyContent={"space-between"}>
@@ -42,37 +48,28 @@ export default function Navbar() {
               <Menu link={"/"} title={"Home"} />
               <Menu link={"/Verify"} title={"Verify"} />
               <Menu link={"/Sign"} title={"Sign"} />
-              {/* <Button
-                p={5}
-                className="nextBtn"
-                borderRadius={"30px"}
-                bg={"purple"}
-              >
-                <HStack>
-                  <Box w={"20px"}>
-                    <Image src={bmc} alt="coffee" />
-                  </Box>
-                  <Heading size={"md"}>Donate Us</Heading>
-                </HStack>
-              </Button> */}
             </HStack>
           </Box>
         ) : (
-          <Box onClick={handelManu}>
-            <Heading p={2}>
+          <Box onClick={onOpen}>
+            <Heading p={2} onClick={handelManu}>
               <GrMenu />
             </Heading>
           </Box>
         )}
       </HStack>
       {openMenu === true ? (
-        <Box>
-          <VStack>
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+        >
+          {/* <ModalOverlay /> */}
+          <ModalContent mt={"18%"} bg={"#171717"} color={"white"} w={"100%"}>
             <Menu link={"/"} title={"Home"} />
             <Menu link={"/Verify"} title={"Verify"} />
             <Menu link={"/Sign"} title={"Sign"} />
-          </VStack>
-        </Box>
+          </ModalContent>
+        </Modal>
       ) : (
         ""
       )}

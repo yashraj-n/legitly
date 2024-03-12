@@ -97,9 +97,11 @@ export default function Verify() {
         sha
       );
       console.log("[Status]: Signature Verified");
-      
+
       console.log("[Result]: ", isValid);
-      isValid === true ? toast.success("Verified") : toast.error("Invalid Signature")
+      isValid === true
+        ? toast.success("Verified")
+        : toast.error("Invalid Signature");
       setIsValid(isValid);
       setInvalidError(isValid ? "" : "Invalid Signature");
     };
@@ -111,7 +113,7 @@ export default function Verify() {
     <>
       <Toaster />
       <HStack justifyContent={"space-evenly"} flexWrap={"wrap"}>
-        <Box w={isGraterthen ? "50%" : "100%"}>
+        <Box w={isGraterthen ? "50%" : "90%"}>
           <form>
             <Box w={"100%"} p={3} m={3}>
               <Text mb="8px">Public Address</Text>
@@ -146,7 +148,7 @@ export default function Verify() {
             </VStack>
           </form>
         </Box>
-        <Box w={isGraterthen ? "40%" : "100%"}>
+        <Box w={isGraterthen ? "40%" : "90%"}>
           <Image src={verifyImg} alt="verifyImg" />
         </Box>
       </HStack>

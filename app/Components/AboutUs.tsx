@@ -104,10 +104,11 @@ function SocalMediaSec() {
   const [isGraterthen] = useMediaQuery("(min-width: 1000px)");
   return (
     <>
-      <VStack h={isGraterthen ? "60vh" : "auto"} justifyContent={"center"}>
+      <VStack h={isGraterthen ? "80vh" : "auto"} justifyContent={"center"}>
         <HStack
           justifyContent={"space-evenly"}
           flexWrap={"wrap"}
+          textAlign={isGraterthen ? "justify" : "center"}
           // alignItems={"start"}
         >
           <Box textAlign={"center"}>
@@ -128,9 +129,9 @@ function SocalMediaSec() {
               color={"#6B7280"}
               fontSize={"20px"}
             >{`Yes you heard right, this website is open source and you can find code of this website on GitHub. You can request a feature, contribute to project by adding feedbacks and mentioning bugs if they exist. `}</Text>
-            <Link href={"/"}>
+            <Link target="blank" href={"https://github.com/yashraj-n/legitly"}>
               <Button m={3} className="nextBtn">
-                Visit GitHub{" "}
+                Visit GitHub
               </Button>
             </Link>
           </Box>
@@ -152,7 +153,7 @@ function CreaterSec() {
       >
         <VStack
           w={isGraterthen ? "70%" : "100%"}
-          h={"70vh"}
+          h={"50vh"}
           justifyContent={"center"}
         >
           <Heading size={"xl"}>Credits</Heading>
