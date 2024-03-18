@@ -11,7 +11,6 @@ import {
   VStack,
   useMediaQuery,
 } from "@chakra-ui/react";
-import socalMediaImg from "../Img/socials.svg";
 import Image from "next/image";
 import { FaGithub, FaNetworkWired } from "react-icons/fa";
 import { FcProcess } from "react-icons/fc";
@@ -29,11 +28,11 @@ import ashish from "../Img/Creater/Ashish.jpeg";
 import Link from "next/link";
 
 export default function AboutUs() {
-  const [isGraterthen] = useMediaQuery("(min-width: 1000px)");
+  const [isGreaterThan] = useMediaQuery("(min-width: 1000px)");
   return (
     <>
       <VStack textAlign={"center"} m={4}>
-        <HStack justifyContent={"center"} w={isGraterthen ? "70%" : "100%"}>
+        <HStack justifyContent={"center"} w={isGreaterThan ? "70%" : "100%"}>
           <Box>
             <Heading size={"xl"}>About Us</Heading>
             <Heading color={"#10B981"} size={"lg"}>

@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import toast, { Toaster } from "react-hot-toast";
 import {
@@ -12,20 +11,23 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import verifyImg from "../Img/verify.png";
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import * as PDFlib from "pdf-lib";
-import { verifyMessage, toUtf8Bytes } from "ethers";
+import { verifyMessage } from "ethers";
+import { SHA256 } from "@/utils";
 
 export default function Verify() {
   const [pdfFile, setPdfFile] = useState(null);
   const [publicAddress, setPublicAddress] = useState("");
 
-  const [isValid, setIsValid] = useState(false);
+  const [_, setIsValid] = useState(false);
   const [invalidError, setInvalidError] = useState("");
 
-  function handleSubmit(e) {
+  function handleSubmit(e : MouseEventHandler<HTMLButtonElement>) {
     invalidError !== "" ? toast.error("Something went wrong") : "";
+    //@ts-ignore
     e.preventDefault();
+
     if (!pdfFile) {
       toast("Please Select File", {
         icon: "🙏🏻",
@@ -59,18 +61,22 @@ export default function Verify() {
     const reader = new FileReader();
     reader.onload = async function () {
       console.log("[Status]: Reading");
+
+      // Dynamically importing cuz its causing issues when importing at the top
+      //@ts-ignore
       const pdfToText = (await import("react-pdftotext")).default;
       const text = await pdfToText(pdfFile);
       console.log("[Text]: ", text);
 
       //Checking Headers
       console.log("[Status]: Checking Headers");
-      const pdfDoc = await PDFlib.PDFDocument.load(reader.result);
+      const pdfDoc = await PDFlib.PDFDocument.load(reader.result as string);
 
       console.log("[Status]: PDF Loaded");
       try {
         var signatureHeader = pdfDoc
-          .getInfoDict()
+          //@ts-ignore
+          .getInfoDict() // using ts-ignore because of the missing type definition
           .get(PDFlib.PDFName.of("signature")).value;
         console.log("[Signature Header]: ", signatureHeader);
       } catch (e) {
@@ -130,18 +136,20 @@ export default function Verify() {
                 id="fileInput"
                 style={{ display: "none" }}
                 accept="application/pdf"
+                // @ts-ignore
                 onChange={(e) => setPdfFile(e.target.files[0])}
               />
               <Button
                 w={"100%"}
                 onClick={() => {
-                  document.getElementById("fileInput").click();
+                  document.getElementById("fileInput")!.click();
                 }}
               >
                 Choose File
               </Button>
             </Box>
             <VStack>
+              {/* @ts-ignore */}
               <Button className="nextBtn" onClick={handleSubmit} type="submit">
                 Submit
               </Button>
@@ -156,26 +164,9 @@ export default function Verify() {
   );
 }
 
-async function SHA256(str: string) {
-  const buf = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder("utf-8").encode(str)
-  );
-  return Array.prototype.map
-    .call(new Uint8Array(buf), (x) => ("00" + x.toString(16)).slice(-2))
-    .join("");
-}
 
-function InputsTags({ inputType, handalChange }) {
-  return (
-    <Box w={"100%"} p={3} m={3}>
-      <Text mb="8px">{lable}</Text>
-      <Input w={"100%"} />
-    </Box>
-  );
-}
 
-async function verifySignature(signature: string, publicKey: string, hash) {
+async function verifySignature(signature: string, publicKey: string, hash : string) {
   hash = `SHA256:${hash}`;
   console.log("hash: ", hash);
   const signerAddress = verifyMessage(hash, signature);

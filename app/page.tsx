@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import {
   Box,
@@ -11,12 +10,11 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { CiHeart } from "react-icons/ci";
-import { BiLink } from "react-icons/bi";
-
 import AboutUs from "./Components/AboutUs";
+
 export default function Home() {
-  const [isGraterthen] = useMediaQuery("(min-width: 1000px)");
+  const [isGreaterThan] = useMediaQuery("(min-width: 1000px)");
+  
   return (
     <>
       <HStack p={3} justifyContent={"center"}>
@@ -24,7 +22,7 @@ export default function Home() {
           <VStack
             p={2}
             justifyContent={"center"}
-            h={isGraterthen ? "80vh" : "auto"}
+            h={isGreaterThan ? "80vh" : "auto"}
           >
             <Heading p={1} size={"3xl"} textAlign={"center"}>
               Your Trusted PDF Verification Platform
@@ -33,7 +31,7 @@ export default function Home() {
             <Heading size={"4xl"} color="#10B981">
               LEGITLY
             </Heading>
-            <Box w={isGraterthen ? "80%" : "100%"} p={3}>
+            <Box w={isGreaterThan ? "80%" : "100%"} p={3}>
               <Text color={"#737373"} textAlign={"center"} size={"25px"}>
                 Your go-to platform for verifying PDF authenticity. Ensure your
                 documents are genuine and unaltered with ease. Join us today for

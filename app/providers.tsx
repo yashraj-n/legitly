@@ -1,7 +1,4 @@
-// app/providers.tsx
-//@ts-nocheck
 "use client";
-
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { ColorModeScript } from "@chakra-ui/react";
 const theme = extendTheme({
@@ -12,8 +9,6 @@ const theme = extendTheme({
 });
 export function Providers({
   children,
-  Component,
-  pageProps,
 }: {
   children: React.ReactNode;
 }) {

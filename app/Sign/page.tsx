@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 
 import {
@@ -12,9 +11,10 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import * as PDFlib from "pdf-lib";
-import { hexlify, toBeArray, toUtf8String } from "ethers";
 import Image from "next/image";
-import uplode from "../Img/uplode.png";
+import uploadImg from "../Img/uplode.png";
+import { SHA256 } from "@/utils";
+
 enum IProgressState {
   Uploaded,
   Reading,
@@ -29,14 +29,14 @@ export default function Sign() {
     IProgressState.None
   );
   // handling file changes
-  const handleFileChange = async (event) => {
+  const handleFileChange = async (event: any) => {
     const file = event.target.files[0];
     //Checking if file is pdf
     if (file.type !== "application/pdf") {
       alert("Please select a PDF file");
       return;
     }
-
+    //@ts-ignore
     if (!ethereum) {
       alert("Please install metamask");
       return;
@@ -47,8 +47,10 @@ export default function Sign() {
     const reader = new FileReader();
 
     reader.onload = async (e) => {
+      //@ts-ignore
       const pdfToText = (await import("react-pdftotext")).default;
-      pdfBuffer = e.target.result;
+
+      pdfBuffer = e.target!.result;
       const text = await pdfToText(file);
       console.log(text);
 
@@ -63,10 +65,11 @@ export default function Sign() {
       setProgressState(IProgressState.Signing);
 
       // Adding signature to the metadata of the pdf
-      const pdfDoc = await PDFlib.PDFDocument.load(pdfBuffer);
+      const pdfDoc = await PDFlib.PDFDocument.load(pdfBuffer as ArrayBuffer);
       console.log("PDF Loaded");
       //
       pdfDoc
+        //@ts-ignore
         .getInfoDict()
         .set(PDFlib.PDFName.of("signature"), PDFlib.PDFString.of(signature));
 
@@ -99,9 +102,10 @@ export default function Sign() {
         flexWrap={"wrap-reverse"}
       >
         <Box w={isGraterthen ? "40%" : "100%"}>
-          <Image src={uplode} alt="uplode" />
+          <Image src={uploadImg} alt="uplode" />
         </Box>
         <Box w={isGraterthen ? "50%" : "100%"}>
+          {/* @ts-ignore */}
           <font>
             <VStack
               w={"100%"}
@@ -122,7 +126,9 @@ export default function Sign() {
                   />
                   <Button
                     w={"100%"}
-                    onClick={() => document.getElementById("fileInput").click()}
+                    onClick={() =>
+                      document.getElementById("fileInput")!.click()
+                    }
                   >
                     Choose File
                   </Button>
@@ -142,6 +148,8 @@ export default function Sign() {
                 </Box>
               </Box>
             </VStack>
+                      {/* @ts-ignore */}
+
           </font>
         </Box>
       </HStack>
@@ -149,33 +157,15 @@ export default function Sign() {
   );
 }
 
-function InputsTags({ inputType, handalChange }) {
-  return (
-    <HStack justifyContent={"center"} w={"50%"}>
-      <Input type={inputType} m={3} onChange={handalChange} w={"90%"} />
-    </HStack>
-  );
-}
-
-async function SHA256(str: string) {
-  const buf = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder("utf-8").encode(str)
-  );
-  return Array.prototype.map
-    .call(new Uint8Array(buf), (x) => ("00" + x.toString(16)).slice(-2))
-    .join("");
-}
-
-async function web3Sign(content) {
+async function web3Sign(content: string) {
   console.log("Requesting Eth acc");
+  //@ts-ignore
   const accounts = await ethereum.request({ method: "eth_requestAccounts" });
   const account = accounts[0];
-  // content = toUtf8String(content);
-  // content = "0x" + content;
   console.log("Acc: ", account);
   console.log("Web3 COntent: ", content);
   console.log("Signing");
+  //@ts-ignore
   const signature = await ethereum.request({
     method: "personal_sign",
     params: [`SHA256:${content}`, account, true],
