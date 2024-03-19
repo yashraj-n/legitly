@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <!-- <img src="logo.png" alt="Markdownify" width="400"> -->
+
   <br>
   Legitly
   <br>
@@ -25,4 +25,37 @@
 - 👨‍🦳 Easy to use
 - 📦 Easy to deploy
 - 🎉 Open Source
+
+## How to use
+
+> [Live at legitly.yashraj.eu.org](https://legitly.vercel.app/)
+
+## Download
+
+```bash
+# Clone the repo
+git clone https://github.com/yashraj-n/legitly
+
+# Change Directory
+cd legitly
+
+# Install Dependencies
+yarn
+# or
+npm install
+
+# Run the website
+yarn dev
+# or
+npm run dev
+```
+
+## Contributors
+
+[You can check all the contributors here](https://github.com/yashraj-n/legitly/graphs/contributors)
+
+## License
+
+[MIT License](https://choosealicense.com/licenses/mit/)
+
 
