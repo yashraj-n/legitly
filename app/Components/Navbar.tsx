@@ -59,10 +59,7 @@ export default function Navbar() {
         )}
       </HStack>
       {openMenu === true ? (
-        <Modal
-          isOpen={isOpen}
-          onClose={onClose}
-        >
+        <Modal isOpen={isOpen} onClose={onClose}>
           {/* <ModalOverlay /> */}
           <ModalContent mt={"18%"} bg={"#171717"} color={"white"} w={"100%"}>
             <Menu link={"/"} title={"Home"} />

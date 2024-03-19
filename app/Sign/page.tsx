@@ -114,7 +114,7 @@ export default function Sign() {
             >
               <Box w={"100%"}>
                 <Text fontSize={"20px"} p={3}>
-                  Uplode PDF:
+                  Upload PDF:
                 </Text>
                 <Box w={"100%"} p={3}>
                   <Input
