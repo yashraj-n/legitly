@@ -152,7 +152,7 @@ function CreaterSec() {
       >
         <VStack
           w={isGraterthen ? "70%" : "100%"}
-          h={"50vh"}
+          h={isGraterthen ? "50vh" : "auto"}
           justifyContent={"center"}
         >
           <Heading size={"xl"}>Credits</Heading>
